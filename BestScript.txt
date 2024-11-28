@@ -1,3 +1,10 @@
+local placeId = game.PlaceId
+local allowedPlaceId = 15092647980
+
+if placeId ~= allowedPlaceId then
+    return
+end
+
 Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -390,6 +397,18 @@ Tabs.Misc:AddButton({
         rejoinGame()
     end
 })
+
+local Toggle = Tabs.AutoFarm:AddToggle("DeployToggle", {
+    Title = "Auto Deploy",
+    Default = false
+})
+
+Toggle:OnChanged(function()
+    while Toggle.Value do
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("game"):WaitForChild("deploy"):InvokeServer()
+        wait(1) -- Ajuste o intervalo conforme necessário
+    end
+end)
 
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
